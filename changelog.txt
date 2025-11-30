@@ -1,8 +1,9 @@
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.6
-Date: xxx
+Date: 2025-11-30
   Changes:
-    - xxx
+    - Improvement: allow prioritising of technologies already in the queue (shift+dbl click)
+    - Fixed: trigger research message not displaying (within 60 seconds of last message)
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.5
 Date: 2025-11-30
