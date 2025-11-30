@@ -313,9 +313,6 @@ function research_queue.push_front(self, technology, level)
     return { "message.urq-already-researched" }
   elseif is_trigger_research(technology) then
     return { "message.urq-unable-to-queue" }
-  elseif research_queue.contains(self, technology, level) then
-    -- TODO: Move to front of queue
-    return { "message.urq-already-in-queue" }
   end
   --- @type TechnologyAndLevel[]
   local to_research = {}
@@ -340,7 +337,11 @@ function research_queue.push_front(self, technology, level)
     local highest = research_queue.get_highest_level(self, technology)
     add_technology(to_move, technology, highest)
   end
-  add_technology(to_research, technology, level, self)
+  if research_queue.contains(self, technology, true) then
+    add_technology(to_move, technology)
+  else
+    add_technology(to_research, technology, level, self)
+  end
   -- Check for errors
   local num_to_research = #to_research
   if num_to_research > constants.queue_limit then
@@ -363,6 +364,7 @@ function research_queue.push_front(self, technology, level)
     local to_research = to_research[i]
     push(self, to_research.technology, to_research.level, num_to_move + i)
   end
+  util.schedule_force_update(self.force)
 end
 
 --- @param self ResearchQueue
@@ -486,19 +488,21 @@ function research_queue.update_active_research(self)
     local current_research = self.force.current_research
     if not current_research or head.technology.name ~= current_research.name then
       self.updating_active_research = true
+      self.force.cancel_current_research()
       self.force.add_research(head.technology)
       self.updating_active_research = false
       self.force_table.last_research_progress = flib_technology.get_research_progress(head.technology, head.level)
       if #head.technology.research_unit_ingredients == 0 then
         for _, player in pairs(head.technology.force.players) do
-          player.print({ "", { "message.urq-requires-player-action" }, head.technology.prototype.localised_name })
+          player.print({ "", { "message.urq-requires-player-action" }, head.technology.prototype.localised_name },
+            { skip = defines.print_skip.never })
         end
         -- find next possible technology and move to the front of the queue
         local next_research = head
         while next_research ~= nil and (is_trigger_research(next_research.technology) or are_prereqs_satisfied(next_research.technology) == false) do
           next_research = next_research.next
         end
-        if next_research ~= nil then
+        if next_research ~= nil and next_research ~= head then
           self.updating_active_research = true
           research_queue.move_to_front(self, next_research.technology, next_research.level)
           self.force.add_research(next_research.technology)
