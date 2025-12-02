@@ -619,6 +619,10 @@ function gui.update_tech_info(self)
     elseif researchTrigger.type == "create-space-platform" then
       base = "technology"
       name = technology.name
+    elseif researchTrigger.type == "craft-fluid" then
+      number = researchTrigger.amount
+      base = "fluid"
+      name = researchTrigger.fluid
     else
       number = researchTrigger.count
       base = "item"
