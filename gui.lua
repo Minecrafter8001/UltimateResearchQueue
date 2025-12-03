@@ -605,7 +605,7 @@ function gui.update_tech_info(self)
   elseif researchTrigger ~= nil then
     local base = nil
     local name = nil
-    local number = 1
+    local number = 0
     local label = { "technology-trigger." .. researchTrigger.type }
     if researchTrigger.type == "mine-entity" then
       base = "entity"
@@ -616,14 +616,11 @@ function gui.update_tech_info(self)
     elseif researchTrigger.type == "capture-spawner" then
       base = "technology"
       name = technology.name
-    elseif researchTrigger.type == "craft-fluid" then
-      label = { "technology-trigger.craft-item" }
-      base = "fluid"
-      name = researchTrigger.fluid
-    elseif researchTrigger.type == "craft-fluids" then
+    elseif researchTrigger.type == "craft-fluid" or researchTrigger.type == "craft-fluids" then
       label = { "technology-trigger.craft-items" }
       base = "fluid"
       name = researchTrigger.fluid
+      number = researchTrigger.amount
     elseif researchTrigger.type == "create-space-platform" then
       base = "technology"
       name = technology.name
@@ -638,15 +635,16 @@ function gui.update_tech_info(self)
       style = "label",
       caption = label,
     })
-    flib_gui.add(ingredients_table, {
+    local ingredient = {
       type = "sprite-button",
       style = "transparent_slot",
       sprite = base .. "/" .. name,
-      number = number,
       elem_tooltip = { type = base, name = name },
       tooltip = show_controls and script.active_mods["RecipeBook"] and { "gui.urq-tooltip-view-in-recipe-book" },
       handler = { [defines.events.on_gui_click] = gui.open_in_recipe_book },
-    })
+    }
+    if number > 0 then ingredient["number"] = number end
+    flib_gui.add(ingredients_table, ingredient)
     self.elems.tech_info_ingredients_count_label.caption = ""
   end
 
