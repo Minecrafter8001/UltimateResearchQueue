@@ -616,6 +616,14 @@ function gui.update_tech_info(self)
     elseif researchTrigger.type == "capture-spawner" then
       base = "technology"
       name = technology.name
+    elseif researchTrigger.type == "craft-fluid" then
+      label = { "technology-trigger.craft-item" }
+      base = "fluid"
+      name = researchTrigger.fluid
+    elseif researchTrigger.type == "craft-fluids" then
+      label = { "technology-trigger.craft-items" }
+      base = "fluid"
+      name = researchTrigger.fluid
     elseif researchTrigger.type == "create-space-platform" then
       base = "technology"
       name = technology.name
