@@ -100,6 +100,8 @@ function temp_flib_gui_templates.technology_slot(parent, technology, level, rese
       name = "technology/" .. technology.name
     elseif researchTrigger.type == "send-item-to-orbit" then
       name = "item/" .. researchTrigger.item.name
+    elseif researchTrigger.type == "scripted" then
+      name = "technology/" .. technology.name
     else
       name = "item/item-unknown"
       log({ "", "Unknown researchTrigger.type(", technology.name, "):  ", serpent.line(researchTrigger, { maxlevel = 5 }) })
