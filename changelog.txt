@@ -1,8 +1,13 @@
 ---------------------------------------------------------------------------------------------------
-Version: 2.0.8
-Date: xxx
+Version: 2.0.9
+Date: 2025-12-15
   Changes:
-    - xxx
+    - Fixed: bug with send to orbit research trigger technology not loading info (#27)
+---------------------------------------------------------------------------------------------------
+Version: 2.0.8
+Date: 2025-12-04
+  Changes:
+    - Fixed: bug with scripted research trigger technology not loading info (#24)
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.7
 Date: 2025-12-03
